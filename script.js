@@ -51,6 +51,12 @@ femaleThirdNameBy.length = 1000
 
 let maleThirdNameBy = femaleThirdNameBy.map(el => el.replace('ўна', 'віч'))
 
+const getIdBy = () => {
+    let id =''
+    for (let i = 0; i < 7; i++) id += Number(generator().toString().slice(-1))
+    return id + ' '
+}
+
 const getThirdNameBy = (name) => {
     return namesBy.slice(500).includes(name) 
         ? maleThirdNameBy[generator()]
@@ -85,7 +91,8 @@ const getNumberBy = () => {
 
 const getInfoBy = () => {
     let name = namesBy[generator()]
-    let result = secondNamesBy[generator()] + ' ' + 
+    let result = getIdBy() +
+        secondNamesBy[generator()] + ' ' + 
         name + ' ' + getThirdNameBy(name) + ' ' +
         'горад ' + citiesBy[generator()] + 
         ', вуліца ' + streetsBy[generator()] +
@@ -144,6 +151,12 @@ femaleThirdNameRu.length = 1000
 
 let maleThirdNameRu = femaleThirdNameRu.map(el => el.replace('вна', 'вич'))
 
+const getIdRu = () => {
+    let id =''
+    for (let i = 0; i < 7; i++) id += Number((generator() + 17).toString().slice(-1))
+    return id + ' '
+}
+
 const getSecondNameRu = (name) => {
     return (namesRu.slice(597).includes(name)) 
         ? secondNamesRu[generator()] + 'а'                                       
@@ -182,7 +195,8 @@ const getNumberRu = () => {
 
 const getInfoRu = () => {
     let name = namesRu[generator()]
-    let result = getSecondNameRu(name) + ' ' + 
+    let result = getIdRu() + 
+        getSecondNameRu(name) + ' ' + 
         name + ' ' + getThirdNameRu(name) + ' ' +
         'город ' + citiesRu[generator()] + 
         ', улица ' + streetsRu[generator()] +
@@ -4121,6 +4135,12 @@ let secondNamesSgP = ['Tan', 'Chan', 'Chong', 'Chen', 'Sim', 'Wang', 'Li', 'Lim'
 secondNamesSgP = secondNamesSgP.concat(secondNamesSgP).concat(secondNamesSgP).concat(secondNamesSgP).concat(secondNamesSgP).concat(secondNamesSgP)
 secondNamesSgP.length = 1000
 
+const getIdSgp = () => {
+    let id =''
+    for (let i = 0; i < 7; i++) id += Number((generator() + 13).toString().slice(-1))
+    return id + ' '
+}
+
 const getAdressSgp = () => {
     return (generator() > 800) 
         ? ''
@@ -4148,7 +4168,8 @@ const getHouseNumberSgp = () => {
 const getInfoSgp = () => {
     let street = streetsSgp[Number(generator() + (generator() + '').slice(-1))]
 
-    let result = namesSgp[generator()] + ' ' + 
+    let result = getIdSgp() +
+        namesSgp[generator()] + ' ' + 
         secondNamesSgP[generator()] + ' ' + 
         citiesSgp + ', ' +
         getAdressSgp() +
@@ -4159,14 +4180,39 @@ const getInfoSgp = () => {
     return result 
 }
 
+let check
 if (localStorage.getItem('errorCount') === null) {
     localStorage.setItem('errorCount', document.getElementById('errors').value)
-} else { document.getElementById('number-err').innerHTML = localStorage.getItem('errorCount'), document.getElementById('errors').value = localStorage.getItem('errorCount')}
+} else { document.getElementById('number-err').innerHTML = localStorage.getItem('errorCount')
+    document.getElementById('errors').value = localStorage.getItem('errorCount')
+    document.getElementById('errors-num').value = localStorage.getItem('errorCount') 
+}
 
 const changeNubers = () => {
     localStorage.setItem('errorCount', document.getElementById('errors').value)
     document.getElementById('number-err').innerHTML = document.getElementById('errors').value
+    document.getElementById('errors-num').value = document.getElementById('errors').value
+    check = 1
+    rerenderApp()
 }
+
+
+const changeNumbersNew = () => {
+    if (document.getElementById('errors-num').value > 1000) {
+        alert('Max number of mistakes is 1000')
+        document.getElementById('errors-num').value = 1000
+    }
+
+    localStorage.setItem('errorCount', document.getElementById('errors-num').value)
+    document.getElementById('number-err').innerHTML = document.getElementById('errors-num').value
+    document.getElementById('errors').value = document.getElementById('errors-num').value
+    check = 1
+    rerenderApp()
+}
+
+const changeCountryByClick = () => { check = 1, country = 'by', localStorage.setItem('region', 'by'), document.getElementById('lang-by').classList.add('active'), document.getElementById('lang-sgp').classList.remove('active'), document.getElementById('lang-ru').classList.remove('active'), rerenderApp() }
+const changeCountrySgpClick = () => { check = 1, country = 'sgp', localStorage.setItem('region', 'sgp'), document.getElementById('lang-by').classList.remove('active'), document.getElementById('lang-sgp').classList.add('active'), document.getElementById('lang-ru').classList.remove('active'), rerenderApp() }
+const changeCountryRuClick = () => { check = 1, country = 'ru', localStorage.setItem('region', 'ru'), document.getElementById('lang-by').classList.remove('active'), document.getElementById('lang-sgp').classList.remove('active'), document.getElementById('lang-ru').classList.add('active'), rerenderApp() }
 
 const changeCountryBy = () => { country = 'by', localStorage.setItem('region', 'by'), document.getElementById('lang-by').classList.add('active'), document.getElementById('lang-sgp').classList.remove('active'), document.getElementById('lang-ru').classList.remove('active') }
 const changeCountrySgp = () => { country = 'sgp', localStorage.setItem('region', 'sgp'), document.getElementById('lang-by').classList.remove('active'), document.getElementById('lang-sgp').classList.add('active'), document.getElementById('lang-ru').classList.remove('active') }
@@ -4181,13 +4227,30 @@ const pseudoRandom = (seed) => {
     let value = seed
   
     return function() {
-      value = (value * 16807 % 2147483647) + 1
+      value = value * 16807 % 2147483647
       return Number(value.toString().slice(-3))
     }
 }
 
 let currentSeed = Number(document.getElementById('seed').value)
 let generator = pseudoRandom(currentSeed)
+let generatorErrors = pseudoRandom(currentSeed)
+
+const getRandomSeed = () => {
+    let randomSeed = Math.floor(Math.random() * 999) + 1
+    document.getElementById('seed').value = randomSeed
+    generator = pseudoRandom(randomSeed)
+    updateCheck()
+}
+
+const updateCheck = () => {
+    check = 1
+    rerenderApp()
+}
+
+const updateInfo = () => {
+    document.getElementById('counter').innerHTML = document.getElementsByClassName('fake-data').length 
+}
 
 const getData = () => {
 
@@ -4204,18 +4267,22 @@ const getData = () => {
 
     info = createMistakes(info)
 
-    const newDiv = document.createElement("div")
+    const li = document.createElement("li")
     const newContent = document.createTextNode(info) 
+    
+    let container = document.getElementById('table')
 
-    newDiv.classList.add('fake-data')
+    li.classList.add('fake-data')
 
-    newDiv.appendChild(newContent)
-    document.body.appendChild(newDiv)
+    li.appendChild(newContent)
+    container.appendChild(li)
+
+    updateInfo()
 }
 
 const deleteSymbol = (str) => {
     let d
-    do { d = str[Number(generator().toString().slice(-2))]
+    do { d = str[Number(generatorErrors().toString().slice(-2))]
     } while (d == ' ' || d == undefined)
 
     return str.replace(d, '')
@@ -4231,9 +4298,9 @@ arr_ru.length = 1000
 
 const addSymbol = (str) => {
     let a, rand
-    do { rand = Number(generator().toString().slice(-2))
+    do { rand = Number(generatorErrors().toString().slice(-2))
     } while (str[rand] == undefined)
-    if (country == 'sgp') { a = arr_en[generator()] } else { a = arr_ru[generator()] }
+    if (country == 'sgp') { a = arr_en[generatorErrors()] } else { a = arr_ru[generatorErrors()] }
 
     return str.slice(0, rand) + a + str.slice(rand)
 }
@@ -4242,7 +4309,7 @@ const changeSymbols = (str) => {
     str = str.split('')
     let i
 
-    do { i = Number(generator().toString().slice(-2)) - 1
+    do { i = Number(generatorErrors().toString().slice(-2)) - 1
     } while (str[i] == undefined)
 
     let c = str.splice(i, 1)
@@ -4270,18 +4337,18 @@ const handleScroll = () => {
 window.addEventListener("scroll", handleScroll)
 
 const createMistakes = (s) => {
-    let mistakes = Number(document.getElementById('errors').value), rest, rand, pointer
+    let mistakes = Number(document.getElementById('errors-num').value), rest, rand, pointer
 
-    if (mistakes != Math.floor(document.getElementById('errors').value)) {
-        rest = mistakes - Math.floor(document.getElementById('errors').value)
+    if (mistakes != Math.floor(document.getElementById('errors-num').value)) {
+        rest = mistakes - Math.floor(document.getElementById('errors-num').value)
         if (rest == 0.25) {
-            do {rand = generator().toString().slice(-1)} while (rand > 3)
+            do {rand = generatorErrors().toString().slice(-1)} while (rand > 3)
             if (rand == 0) { mistakes += 0.75 }
         } else if (rest == 0.5) {
-            do {rand = generator().toString().slice(-1)} while (rand > 3)
+            do {rand = generatorErrors().toString().slice(-1)} while (rand > 3)
             if (rand == 0 || rand == 1) { mistakes += 0.5 }
         } else if (rest == 0.75) {
-            do {rand = generator().toString().slice(-1)} while (rand > 3)
+            do {rand = generatorErrors().toString().slice(-1)} while (rand > 3)
             if (rand == 0 || rand == 1 || rand == 2) { mistakes += 0.25 }
         }
         mistakes = Math.floor(mistakes)
@@ -4295,8 +4362,10 @@ const createMistakes = (s) => {
     if ((del + add + change) != mistakes) {add++}
     if ((del + add + change) != mistakes) {change++}
 
+    console.log(mistakes, del, add, change)
+
     while (del != 0 || add != 0 || change != 0) { 
-        do {pointer = generator().toString().slice(-1)} while (pointer > 2)
+        do {pointer = generatorErrors().toString().slice(-1)} while (pointer > 2)
 
         if (pointer == 0 && del != 0 ) { s = deleteSymbol(s), del-- } else
         if (pointer == 1 && add != 0) { s = addSymbol(s), add-- } else
@@ -4306,4 +4375,25 @@ const createMistakes = (s) => {
 
     return s
 
+}
+
+function rerenderApp() {
+    if (check && document.getElementsByClassName('fake-data').length != 0) {
+        let dataLength = document.getElementsByClassName('fake-data').length
+        document.getElementById('table').remove()
+
+        let wrapper = document.getElementById('table-wrapper')
+        const newDiv = document.createElement('div')
+        newDiv.id = 'table'
+        wrapper.appendChild(newDiv)
+
+        generator = pseudoRandom(999) 
+        generator = pseudoRandom(Number(document.getElementById('seed').value))
+
+        generatorErrors = pseudoRandom(999) 
+        generatorErrors = pseudoRandom(Number(document.getElementById('seed').value))
+
+        for (let i = 0; i < dataLength; i++) { getData() }
+
+    }
 }

@@ -10,28 +10,39 @@
 <body>
     <div class="wrapper">
         <h1 class="main-text">
-            Welcome to fake data generator
+            Welcome to fake data generator [<span id="counter">0</span>]
         </h1>
         <div class="lang-buttons">
-            <div class="btn active" id="lang-by" onclick="changeCountryBy()">
+            <div class="btn active" id="lang-by" onclick="changeCountryByClick()">
                 Belarus
             </div>
-            <div class="btn" id="lang-sgp" onclick="changeCountrySgp()">
+            <div class="btn" id="lang-sgp" onclick="changeCountrySgpClick()">
                 Singapoure
             </div>
-            <div class="btn" id="lang-ru" onclick="changeCountryRu()">
+            <div class="btn" id="lang-ru" onclick="changeCountryRuClick()">
                 Russia
             </div>
         </div>
     </div>
     <div class="errors-wrapper">
         <label class="label" for="errors">Number of mistakes: <span id="number-err">0</span></label>
-        <input type="range" id="errors" min="0" max="20" step=".25" value="0" onchange="changeNubers()">
+        <input type="range" id="errors" min="0" max="10" step=".25" value="0" onchange="changeNubers()">
+        <input type="number" id="errors-num" min="0" max="1000" step=".25" value='0' onchange="changeNumbersNew()">
         <label for="seed">Input seed number:</label>
-        <input type="number" id="seed" min="1" value="1">
+        <div class="rand-wrapper">
+            <input type="number" id="seed" min="1" value="1" onchange="updateCheck()"> 
+            <div class="rand-btn" onclick="getRandomSeed()">Random Seed</div>
+        </div>
         <button class="get-btn" onclick="getMultipleData()" >Get Info</button>
     </div>
-    <main id="main"></main>
+    <main>
+        
+    </main>
+    <ol id="table-wrapper" onchange="updateInfo()">
+        <div id="table">
+
+        </div>
+    </ol>
     <script src="script.js"></script>
 </body>
 </html>
