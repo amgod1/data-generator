@@ -4362,7 +4362,7 @@ const createMistakes = (s) => {
     if ((del + add + change) != mistakes) {add++}
     if ((del + add + change) != mistakes) {change++}
 
-    console.log(mistakes, del, add, change)
+    //console.log(mistakes, del, add, change)
 
     while (del != 0 || add != 0 || change != 0) { 
         do {pointer = generatorErrors().toString().slice(-1)} while (pointer > 2)
