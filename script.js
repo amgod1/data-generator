@@ -54,7 +54,7 @@ let maleThirdNameBy = femaleThirdNameBy.map(el => el.replace('ўна', 'віч')
 const getIdBy = () => {
     let id =''
     for (let i = 0; i < 7; i++) id += Number(generator().toString().slice(-1))
-    return id + ' '
+    return id
 }
 
 const getThirdNameBy = (name) => {
@@ -77,8 +77,8 @@ const getHouseNumberBy = () => {
     } while (flat == 0) 
 
     return (generator() > 800)
-        ? ', дом ' + house + ' '
-        : ', дом ' + house + ', кватэра ' + flat + ' ' 
+        ? 'дом ' + house
+        : 'дом ' + house + ', кватэра ' + flat 
 }
 
 const getNumberBy = () => {
@@ -91,13 +91,12 @@ const getNumberBy = () => {
 
 const getInfoBy = () => {
     let name = namesBy[generator()]
-    let result = getIdBy() +
-        secondNamesBy[generator()] + ' ' + 
-        name + ' ' + getThirdNameBy(name) + ' ' +
-        'горад ' + citiesBy[generator()] + 
-        ', вуліца ' + streetsBy[generator()] +
-        getHouseNumberBy() +
-        getNumberBy()
+    let result = [getIdBy(),
+        secondNamesBy[generator()] + ' ' + name + ' ' + getThirdNameBy(name),
+        'горад ' + citiesBy[generator()], 
+        'вуліца ' + streetsBy[generator()],
+        getHouseNumberBy(),
+        getNumberBy()]  
 
     return result
 }
@@ -154,7 +153,7 @@ let maleThirdNameRu = femaleThirdNameRu.map(el => el.replace('вна', 'вич')
 const getIdRu = () => {
     let id =''
     for (let i = 0; i < 7; i++) id += Number((generator() + 17).toString().slice(-1))
-    return id + ' '
+    return id
 }
 
 const getSecondNameRu = (name) => {
@@ -183,8 +182,8 @@ const getHouseNumberRu = () => {
     } while (flat == 0) 
 
     return (generator() > 800)
-        ? ', дом ' + house + ' '
-        : ', дом ' + house + ', кватэра ' + flat + ' ' 
+        ? 'дом ' + house
+        : 'дом ' + house + ', квартира ' + flat 
 }
 
 const getNumberRu = () => {
@@ -195,13 +194,13 @@ const getNumberRu = () => {
 
 const getInfoRu = () => {
     let name = namesRu[generator()]
-    let result = getIdRu() + 
-        getSecondNameRu(name) + ' ' + 
-        name + ' ' + getThirdNameRu(name) + ' ' +
-        'город ' + citiesRu[generator()] + 
-        ', улица ' + streetsRu[generator()] +
-        getHouseNumberRu() +
+    let result =[ getIdRu(), 
+        getSecondNameRu(name) + ' ' + name + ' ' + getThirdNameRu(name),
+        'город ' + citiesRu[generator()], 
+        'улица ' + streetsRu[generator()],
+        getHouseNumberRu(),
         getNumberRu()
+    ]
 
     return result 
 }
@@ -4138,13 +4137,13 @@ secondNamesSgP.length = 1000
 const getIdSgp = () => {
     let id =''
     for (let i = 0; i < 7; i++) id += Number((generator() + 13).toString().slice(-1))
-    return id + ' '
+    return id
 }
 
 const getAdressSgp = () => {
-    return (generator() > 800) 
-        ? ''
-        : (Math.floor(Math.random() * 20) + 1 + ' ')
+    let add 
+    do {add = generator().toString().slice(-2)} while (add == '0' || add == '00')
+    return add
 }
 
 const getNumberSgp = () => {
@@ -4153,29 +4152,15 @@ const getNumberSgp = () => {
     return s
 }
 
-const getHouseNumberSgp = () => {
-    let flat = 0
-    do { flat = (generator() > 800) 
-        ? ' ' 
-        : (generator() > 800) 
-            ? (Number((generator()).toString().slice(-2)) + 100) + ' '
-            : Number((generator()).toString().slice(-2)) + ' ' 
-    } while (flat == 0) 
-
-    return flat
-}
-
 const getInfoSgp = () => {
     let street = streetsSgp[Number(generator() + (generator() + '').slice(-1))]
 
-    let result = getIdSgp() +
-        namesSgp[generator()] + ' ' + 
-        secondNamesSgP[generator()] + ' ' + 
-        citiesSgp + ', ' +
-        getAdressSgp() +
-        street + ' - ' + 
-        getHouseNumberSgp() +
-        getNumberSgp()
+    let result = [getIdSgp(),
+        namesSgp[generator()] + ' ' + secondNamesSgP[generator()], 
+        citiesSgp,
+        street, 
+        getAdressSgp(),
+        getNumberSgp()]
 
     return result 
 }
@@ -4195,7 +4180,6 @@ const changeNubers = () => {
     check = 1
     rerenderApp()
 }
-
 
 const changeNumbersNew = () => {
     if (document.getElementById('errors-num').value > 1000) {
@@ -4235,6 +4219,7 @@ const pseudoRandom = (seed) => {
 let currentSeed = Number(document.getElementById('seed').value)
 let generator = pseudoRandom(currentSeed)
 let generatorErrors = pseudoRandom(currentSeed)
+let generateErrorsPlace = pseudoRandom(currentSeed)
 
 const getRandomSeed = () => {
     let randomSeed = Math.floor(Math.random() * 999) + 1
@@ -4252,55 +4237,101 @@ const updateInfo = () => {
     document.getElementById('counter').innerHTML = document.getElementsByClassName('fake-data').length 
 }
 
-const getData = () => {
+let info, infoLen, infoLength
 
+const changeInfoLen = () => {
+    infoLen[5] = infoLength[0] + infoLength[1] + infoLength[2] + infoLength[3] + infoLength[4] + infoLength[5]
+    infoLen[4] = infoLength[0] + infoLength[1] + infoLength[2] + infoLength[3] + infoLength[4]
+    infoLen[3] = infoLength[0] + infoLength[1] + infoLength[2] + infoLength[3]
+    infoLen[2] = infoLength[0] + infoLength[1] + infoLength[2]
+    infoLen[1] = infoLength[0] + infoLength[1]
+    infoLen[0] = infoLength[0]
+}
+
+const getData = () => {
     if (currentSeed != document.getElementById('seed').value) { 
         currentSeed = Number(document.getElementById('seed').value)
         generator = pseudoRandom(currentSeed)
     } 
 
-    let info
-
     if (country == 'by') { info = getInfoBy() } else 
     if (country == 'sgp') { info = getInfoSgp() } else 
     if (country == 'ru') { info = getInfoRu() } 
 
+    infoLen = [], infoLength = []
+    info.forEach(el => infoLength.push(el.length))
+
+    changeInfoLen()
+
+    info = info.join('')
     info = createMistakes(info)
 
-    const li = document.createElement("li")
-    const newContent = document.createTextNode(info) 
+    const tr = document.createElement("tr")
+    const td_number = document.createElement("td"); td_number.textContent = Array.from(document.querySelectorAll('.fake-data')).length + 1
+    const td_id = document.createElement("td"); td_id.textContent = info.slice(0, infoLength[0])
+    const td_fio = document.createElement("td"); td_fio.textContent = info.slice(infoLength[0], infoLength[0] + infoLength[1])
+    const td_town = document.createElement("td"); td_town.textContent = info.slice(infoLength[0] + infoLength[1], infoLength[0] + infoLength[1] + infoLength[2])
+    const td_street = document.createElement("td"); td_street.textContent = info.slice(infoLength[0] + infoLength[1] + infoLength[2], infoLength[0] + infoLength[1] + infoLength[2] + infoLength[3])
+    const td_house = document.createElement("td"); td_house.textContent = info.slice(infoLength[0] + infoLength[1] + infoLength[2] + infoLength[3], infoLength[0] + infoLength[1] + infoLength[2] + infoLength[3] + infoLength[4])
+    const td_tel = document.createElement("td"); td_tel.textContent = info.slice(infoLength[0] + infoLength[1] + infoLength[2] + infoLength[3] + infoLength[4], infoLength[0] + infoLength[1] + infoLength[2] + infoLength[3] + infoLength[4] + infoLength[5])
     
     let container = document.getElementById('table')
 
-    li.classList.add('fake-data')
+    tr.appendChild(td_number)
+    tr.appendChild(td_id)
+    tr.appendChild(td_fio)
+    tr.appendChild(td_town)
+    tr.appendChild(td_street)
+    tr.appendChild(td_house)
+    tr.appendChild(td_tel)
 
-    li.appendChild(newContent)
-    container.appendChild(li)
+    tr.classList.add('fake-data')
+    container.appendChild(tr)
 
     updateInfo()
 }
 
 const deleteSymbol = (str) => {
-    let d
-    do { d = str[Number(generatorErrors().toString().slice(-2))]
-    } while (d == ' ' || d == undefined)
+    let d, p
+    
+    do { p = Number(generatorErrors().toString().slice(-2)), d = str[p]
+    } while (d == ' ' || d == undefined || d == str[0] || p == infoLen[0] || p == infoLen[1] || p == infoLen[2] || p == infoLen[3] || p == infoLen[4] || p == infoLen[5])
 
-    return str.replace(d, '')
+    for (let i = 0; i < infoLen.length; i++) {
+        if (infoLen[i] >= p) { 
+            infoLength[i]--
+            changeInfoLen()
+            break
+        }
+    }
+
+    return str.slice(0, p) + str.slice(p + 1)
 }
 
 let arr_en = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 arr_en = arr_en.concat(arr_en).concat(arr_en).concat(arr_en).concat(arr_en).concat(arr_en).concat(arr_en).concat(arr_en).concat(arr_en).concat(arr_en).concat(arr_en).concat(arr_en).concat(arr_en).concat(arr_en).concat(arr_en).concat(arr_en).concat(arr_en).concat(arr_en).concat(arr_en).concat(arr_en)
 arr_en.length = 1000
 
-let arr_ru = ['а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ь', 'ы', 'ъ', 'э', 'ю', 'я', 'А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ё', 'Ж', 'З', 'И', 'Й', 'К', 'Л', 'М', 'Н', 'О', 'П', 'Р', 'С', 'Т', 'У', 'Ф', 'Х', 'Ц', 'Ч', 'Ш', 'Щ', 'Ь', 'Ы', 'Ъ', 'Э', 'Ю', 'Я'];
+let arr_ru = [' ','а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ь', 'ы', 'ъ', 'э', 'ю', 'я', 'А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ё', 'Ж', 'З', 'И', 'Й', 'К', 'Л', 'М', 'Н', 'О', 'П', 'Р', 'С', 'Т', 'У', 'Ф', 'Х', 'Ц', 'Ч', 'Ш', 'Щ', 'Ь', 'Ы', 'Ъ', 'Э', 'Ю', 'Я'];
 arr_ru = arr_ru.concat(arr_ru).concat(arr_ru).concat(arr_ru).concat(arr_ru).concat(arr_ru).concat(arr_ru).concat(arr_ru).concat(arr_ru).concat(arr_ru).concat(arr_ru).concat(arr_ru).concat(arr_ru).concat(arr_ru).concat(arr_ru).concat(arr_ru)
 arr_ru.length = 1000
 
 const addSymbol = (str) => {
     let a, rand
     do { rand = Number(generatorErrors().toString().slice(-2))
-    } while (str[rand] == undefined)
+    } while (str[rand] == undefined || str[rand] == ' ' || rand == 0)
     if (country == 'sgp') { a = arr_en[generatorErrors()] } else { a = arr_ru[generatorErrors()] }
+
+    console.log('rand is ', rand, 'a is ', a)
+
+    for (let i = 0; i < infoLen.length; i++) {
+        if (infoLen[i] >= rand) { 
+            infoLength[i]++
+            changeInfoLen()
+            break
+        }
+    }
+
 
     return str.slice(0, rand) + a + str.slice(rand)
 }
@@ -4310,7 +4341,7 @@ const changeSymbols = (str) => {
     let i
 
     do { i = Number(generatorErrors().toString().slice(-2)) - 1
-    } while (str[i] == undefined)
+    } while (str[i] == undefined || str[i] == ' ' || str[i + 1] == ' ' || str[i - 1] == ' ')
 
     let c = str.splice(i, 1)
     str.splice(++i, 0, c[0])
@@ -4337,7 +4368,7 @@ const handleScroll = () => {
 window.addEventListener("scroll", handleScroll)
 
 const createMistakes = (s) => {
-    let mistakes = Number(document.getElementById('errors-num').value), rest, rand, pointer
+    let mistakes = Number(document.getElementById('errors-num').value), rest, rand, pointer, i
 
     if (mistakes != Math.floor(document.getElementById('errors-num').value)) {
         rest = mistakes - Math.floor(document.getElementById('errors-num').value)
@@ -4370,7 +4401,7 @@ const createMistakes = (s) => {
         if (pointer == 0 && del != 0 ) { s = deleteSymbol(s), del-- } else
         if (pointer == 1 && add != 0) { s = addSymbol(s), add-- } else
         if (pointer == 2 && change != 0) { s = changeSymbols(s), change-- }
-        
+
     }
 
     return s
@@ -4383,7 +4414,7 @@ function rerenderApp() {
         document.getElementById('table').remove()
 
         let wrapper = document.getElementById('table-wrapper')
-        const newDiv = document.createElement('div')
+        const newDiv = document.createElement('table')
         newDiv.id = 'table'
         wrapper.appendChild(newDiv)
 
